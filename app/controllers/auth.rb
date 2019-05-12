@@ -23,8 +23,11 @@ module Vitae
           session[:current_account] = account
           flash[:notice] = "Welcome back #{account['username']}!"
           routing.redirect '/'
-        rescue StandardError
+        rescue AuthenticateAccount::UnauthorizedError
           flash[:error] = 'Username and password did not match our records'
+          routing.redirect @login_route
+        rescue StandardError
+          flash[:error] = 'Internal error, please try again later'
           routing.redirect @login_route
         end
       end
