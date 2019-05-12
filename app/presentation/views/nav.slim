@@ -19,9 +19,9 @@ nav role="navigation" class="navbar navbar-default navbar-static-top"
               = "#{@current_account['username']}"
             ul class=-"dropdown-menu"
               li
-                a href="/account/#{@current_account['username']}" account
+                a href="/account/#{@current_account['username']}" Account
               li
-                a href='/auth/logout' logout
+                a href='/auth/logout' Logout
         - else
           li
-            a href='/auth/login' login
+            a href='/auth/login' Login
