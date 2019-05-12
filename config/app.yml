@@ -8,5 +8,5 @@ test:
   APP_URL: http://localhost:9292
 
 production:
-  API_URL: http://vitae2-api.herokuapp.com/api/v1
-  APP_URL: http://vitae2.herokuapp.com
+  API_URL: https://vitae2-api.herokuapp.com/api/v1
+  APP_URL: https://vitae2.herokuapp.com
