@@ -3,6 +3,8 @@
 require 'roda'
 require 'econfig'
 require 'rack/ssl-enforcer'
+require 'rack/session/redis'
+require_relative '../require_app'
 
 module Vitae
   # Configuration for the API
@@ -12,13 +14,25 @@ module Vitae
     extend Econfig::Shortcut
     Econfig.env = environment.to_s
     Econfig.root = '.'
+    ONE_MONTH = 30 * 24 * 60 * 60
+
+    configure do
+      SecureSession.setup(config)
+      SecureMessage.setup(config)
+    end
 
     configure :production do
       use Rack::SslEnforcer, hsts: true
+
+      use Rack::Session::Redis,
+          expire_after: ONE_MONTH, redis_server: config.REDIS_URL
     end
 
     configure :development, :test do
       require 'pry'
+
+      use Rack::Session::Pool,
+      expire_after: ONE_MONTH
 
       # Allows running reload! in pry to restart entire app
       def self.reload!

@@ -17,6 +17,8 @@ gem 'pry'
 
 # Communication
 gem 'http'
+gem 'redis'
+gem 'redis-rack'
 
 # Security
 gem 'rack-ssl-enforcer'
