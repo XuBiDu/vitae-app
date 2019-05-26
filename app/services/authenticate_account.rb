@@ -13,11 +13,16 @@ module Vitae
 
     def call(username:, password:)
       response = HTTP.post("#{@config.API_URL}/auth/authenticate",
-                           json: { username: username, password: password })
+                           json: { username: username,
+                                   password: password })
 
       raise(UnauthorizedError) unless response.code == 200
 
-      response.parse['attributes']
+      account_info = response.parse['attributes']
+      {
+        account: account_info['account']['attributes'],
+        auth_token: account_info['auth_token']
+      }
     end
   end
 end

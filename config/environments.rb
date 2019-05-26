@@ -31,8 +31,7 @@ module Vitae
     configure :development, :test do
       require 'pry'
 
-      use Rack::Session::Pool,
-      expire_after: ONE_MONTH
+      use Rack::Session::Pool, expire_after: ONE_MONTH
 
       # Allows running reload! in pry to restart entire app
       def self.reload!

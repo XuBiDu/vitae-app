@@ -1,0 +1,20 @@
+div class="row" style="vertical-align: bottom;"
+  div class="col-xs-9"
+    h3 All CVs
+  div class="col-xs-3"
+table class="table"
+  thead
+    tr
+      th Name
+      th Edit
+      th Download as LaTeX
+      th Download as PDF
+  tbody
+    - sheets.all.each do |sheet|
+      tr
+        td
+          = sheet.name
+        td
+          a href="/sheet/#{sheet.file_id}" Edit
+        td
+        td

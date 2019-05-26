@@ -7,7 +7,7 @@
 #  require_app
 #  require_app('config')
 #  require_app(['config', 'models'])
-def require_app(folders = %w[lib services controllers])
+def require_app(folders = %w[lib services controllers models])
   app_list = Array(folders).map { |folder| "app/#{folder}" }
   full_list = [app_list, 'config'].flatten.join(',')
   Dir.glob("./{#{full_list}}/**/*.rb").each do |file|

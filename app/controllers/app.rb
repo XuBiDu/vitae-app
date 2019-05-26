@@ -6,14 +6,14 @@ require 'slim'
 module Vitae
   # Base class for Vitae Web Application
   class App < Roda
-    plugin :render, engine: 'slim', views: 'app/presentation/views'
-    plugin :assets, css: 'style.css', path: 'app/presentation/assets'
-    plugin :public, root: 'app/presentation/public'
-    plugin :multi_route
     plugin :flash
+    plugin :multi_route
+    plugin :assets, css: 'style.css', path: 'app/presentation/assets'
+    plugin :render, engine: 'slim', views: 'app/presentation/views'
+    plugin :public, root: 'app/presentation/public'
 
     route do |routing|
-      @current_account = SecureSession.new(session).get(:current_account)
+      @current_account = CurrentSession.new(session).current_account
 
       routing.public
       routing.assets
