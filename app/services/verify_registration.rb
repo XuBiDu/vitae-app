@@ -24,7 +24,7 @@ module Vitae
     end
 
     def expires
-      Time.now.to_i + @config.REGLINK_EXPIRATION * 60
+      Time.now.to_i + @config.REGLINK_EXPIRATION.to_i * 60
     end
   end
 end

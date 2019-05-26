@@ -1,11 +1,11 @@
 ---
 development:
-  API_URL: http://localhost:3000/api/v1
-  APP_URL: http://localhost:9292
-  REGLINK_EXPIRATION: 1
+  API_URL: "http://localhost:3000/api/v1"
+  APP_URL: "http://localhost:9292"
+  REGLINK_EXPIRATION: "1"
 test:
-  API_URL: http://localhost:3000/api/v1
-  APP_URL: http://localhost:9292
-  REGLINK_EXPIRATION: 1
+  API_URL: "http://localhost:3000/api/v1"
+  APP_URL: "http://localhost:9292"
+  REGLINK_EXPIRATION: "1"
 
 production:
