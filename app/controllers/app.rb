@@ -12,9 +12,7 @@ module Vitae
     plugin :render, engine: 'slim', views: 'app/presentation/views'
     plugin :public, root: 'app/presentation/public'
 
-
     route do |routing|
-      puts session.inspect
       @current_account = CurrentSession.new(session).current_account
 
       routing.public

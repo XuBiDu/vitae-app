@@ -21,21 +21,25 @@ module Vitae
       SecureMessage.setup(config)
     end
 
-    configure :development, :test do
-      # use Rack::Session::Cookie,
-      #     expire_after: ONE_MONTH, secret: config.SESSION_SECRET
-
-      # use Rack::Session::Pool,
-      #     expire_after: ONE_MONTH
+    configure :production do
+      use Rack::SslEnforcer, hsts: true
 
       use Rack::Session::Redis,
           expire_after: ONE_MONTH, redis_server: config.REDIS_URL
     end
 
     configure :development, :test do
-      require 'pry'
+      # use Rack::Session::Cookie,
+      #     expire_after: ONE_MONTH, secret: config.SESSION_SECRET
 
-      use Rack::Session::Pool, expire_after: ONE_MONTH
+      # use Rack::Session::Pool,
+      #     expire_after: ONE_MONTH
+      # use Rack::Session::Pool, expire_after: ONE_MONTH
+
+      use Rack::Session::Redis,
+          expire_after: ONE_MONTH, redis_server: config.REDIS_URL
+
+      require 'pry'
 
       # Allows running reload! in pry to restart entire app
       def self.reload!
