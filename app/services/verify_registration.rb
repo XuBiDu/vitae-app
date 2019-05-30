@@ -18,7 +18,7 @@ module Vitae
 
       response = HTTP.post("#{@config.API_URL}/auth/register",
                            json: registration_data)
-      raise(VerificationError) unless response.code == 202
+      raise(VerificationError, response.parse['message']) unless response.code == 202
 
       response.parse
     end

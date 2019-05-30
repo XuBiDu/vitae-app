@@ -16,17 +16,23 @@ module Vitae
 
         # POST /auth/login
         routing.post do
-          account_info = AuthenticateAccount.new(App.config).call(
-            username: routing.params['username'],
-            password: routing.params['password']
-          )
+          credentials = Form::LoginCredentials.call(routing.params)
 
-          current_account = CurrentAccount.new(
-            account_info[:account],
-            account_info[:auth_token]
+          if credentials.failure?
+            flash[:error] = 'Please enter both username and password'
+            routing.redirect @login_route
+          end
+
+          authenticated = AuthenticateAccount.new(App.config).call(credentials)
+
+
+          current_account = Account.new(
+            authenticated[:account],
+            authenticated[:auth_token]
           )
 
           CurrentSession.new(session).current_account = current_account
+
           flash[:notice] = "Welcome back #{current_account.username}!"
           routing.redirect '/'
         rescue AuthenticateAccount::UnauthorizedError
@@ -57,6 +63,23 @@ module Vitae
           # GET /auth/register
           routing.get do
             view :register
+          end
+
+          routing.post do
+            registration = Form::Registration.call(routing.params)
+
+            if registration.failure?
+              flash[:error] = Form.validation_errors(registration)
+              routing.redirect @register_route
+            end
+
+            a = VerifyRegistration.new(App.config).call(registration.output)
+            flash[:notice] = 'Please check your email for a verification link'
+            routing.redirect '/'
+          rescue StandardError => e
+            puts "ERROR VERIFYING REGISTRATION: #{routing.params}\n#{e.inspect}"
+            flash[:error] = e.message
+            routing.redirect @register_route
           end
 
           # POST /auth/register

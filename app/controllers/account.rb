@@ -7,6 +7,8 @@ module Vitae
   # Web controller for Vitae API
   class App < Roda
     route('account') do |routing|
+      @account_route = '/account'
+
       routing.on do
         # GET /account/
         routing.get String do |username|
@@ -19,13 +21,15 @@ module Vitae
 
         # POST /account/<token>
         routing.post String do |registration_token|
-          raise 'Passwords do not match' if
-          routing.params['password'] != routing.params['password_confirm']
+          passwords = Form::Passwords.call(routing.params)
 
-          raise 'Passwords cannot be empty' if
-            routing.params['password'].empty?
+          if passwords.failure?
+            flash[:error] = Form.validation_errors(passwords)
+            routing.redirect "/auth/register/#{registration_token}"
+          end
 
           new_account = SecureMessage.decrypt(registration_token)
+
           CreateAccount.new(App.config).call(
             email: new_account['email'],
             username: new_account['username'],

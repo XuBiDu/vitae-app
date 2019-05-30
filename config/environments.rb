@@ -21,8 +21,12 @@ module Vitae
       SecureMessage.setup(config)
     end
 
-    configure :production do
-      use Rack::SslEnforcer, hsts: true
+    configure :development, :test do
+      # use Rack::Session::Cookie,
+      #     expire_after: ONE_MONTH, secret: config.SESSION_SECRET
+
+      # use Rack::Session::Pool,
+      #     expire_after: ONE_MONTH
 
       use Rack::Session::Redis,
           expire_after: ONE_MONTH, redis_server: config.REDIS_URL
