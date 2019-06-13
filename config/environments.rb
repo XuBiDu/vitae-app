@@ -16,6 +16,11 @@ module Vitae
     Econfig.root = '.'
     ONE_MONTH = 30 * 24 * 60 * 60
 
+    ENV['GOOGLE_ACCOUNT_TYPE'] = config['GOOGLE_ACCOUNT_TYPE']
+    ENV['GOOGLE_CLIENT_ID'] = config['GOOGLE_CLIENT_ID']
+    ENV['GOOGLE_CLIENT_EMAIL'] = config['GOOGLE_CLIENT_EMAIL']
+    ENV['GOOGLE_PRIVATE_KEY'] = config['GOOGLE_PRIVATE_KEY']
+
     configure do
       SecureSession.setup(config)
       SecureMessage.setup(config)

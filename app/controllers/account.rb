@@ -1,31 +1,31 @@
 # frozen_string_literal: true
-
-require 'roda'
 require_relative './app'
 
 module Vitae
   # Web controller for Vitae API
   class App < Roda
-    route('account') do |routing|
+    route('account') do |r|
       @account_route = '/account'
 
-      routing.on do
+      r.on do
         # GET /account/
-        routing.get String do |username|
-          if @current_account && @current_account.username == username
-            view :account, locals: { current_account: @current_account }
-          else
-            routing.redirect '/auth/login'
-          end
+        r.get String do |username|
+          account = GetAccountDetails.new(App.config).call(
+            @current_account, username
+          )
+          view :account, locals: { account: account }
+        rescue GetAccountDetails::InvalidAccount => e
+          flash[:error] = e.message
+          r.redirect '/auth/login'
         end
 
         # POST /account/<token>
-        routing.post String do |registration_token|
-          passwords = Form::Passwords.call(routing.params)
+        r.post String do |registration_token|
+          passwords = Form::Passwords.call(r.params)
 
           if passwords.failure?
             flash[:error] = Form.validation_errors(passwords)
-            routing.redirect "/auth/register/#{registration_token}"
+            r.redirect "/auth/register/#{registration_token}"
           end
 
           new_account = SecureMessage.decrypt(registration_token)
@@ -33,16 +33,16 @@ module Vitae
           CreateAccount.new(App.config).call(
             email: new_account['email'],
             username: new_account['username'],
-            password: routing.params['password']
+            password: r.params['password']
           )
           flash[:notice] = 'Account created, congrats! Please login.'
-          routing.redirect '/auth/login'
+          r.redirect '/auth/login'
         rescue CreateAccount::InvalidAccount => e
           flash[:error] = e.message
-          routing.redirect '/auth/register'
+          r.redirect '/auth/register'
         rescue StandardError => e
           flash[:error] = e.message
-          routing.redirect(
+          r.redirect(
             "#{App.config.APP_URL}/auth/register/#{registration_token}"
           )
         end

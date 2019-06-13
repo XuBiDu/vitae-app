@@ -3,3 +3,24 @@
   width:100%;
   display:block;
 }
+
+img.pic-s  {
+  max-width:32px;
+  max-height:32px;
+  border-radius: 32px;
+  border: 1px solid gray;
+}
+
+img.pic-m  {
+  max-width:64px;
+  max-height:64px;
+  border-radius: 64px;
+  border: 2px solid gray;
+}
+
+img.pic-l  {
+  max-width:128px;
+  max-height:128px;
+  border: 4px solid gray;
+  border-radius: 128px;
+}

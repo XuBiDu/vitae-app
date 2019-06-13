@@ -12,16 +12,22 @@ module Vitae
     plugin :render, engine: 'slim', views: 'app/presentation/views'
     plugin :public, root: 'app/presentation/public'
 
-    route do |routing|
+    route do |r|
       @current_account = CurrentSession.new(session).current_account
 
-      routing.public
-      routing.assets
-      routing.multi_route
+      r.public
+      r.assets
+      r.multi_route
 
       # GET /
-      routing.root do
+      r.root do
         view 'home', locals: { current_account: @current_account }
+      end
+      r.on 'tos' do
+        view 'tos'
+      end
+      r.on 'privacy' do
+        view 'privacy'
       end
     end
   end

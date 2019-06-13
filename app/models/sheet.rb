@@ -23,14 +23,14 @@ module Vitae
     def process_relationships(relationships)
       return unless relationships
 
-      @owner = Account.new(relationships['owner']['attributes'])
+      @owner = Account.new(relationships['owner'])
       @collaborators = process_collaborators(relationships['collaborators'])
     end
 
     def process_collaborators(collaborators)
       return nil unless collaborators
 
-      collaborators.map { |account_info| Account.new(account_info['attributes']) }
+      collaborators.map { |account_info| Account.new(account_info) }
     end
   end
 end

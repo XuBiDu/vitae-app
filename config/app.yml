@@ -1,11 +1,29 @@
 ---
 development:
-  API_URL: "http://localhost:3000/api/v1"
   APP_URL: "http://localhost:9292"
+  API_URL: "http://localhost:3000/api/v1"
+
   REGLINK_EXPIRATION: "30"
+  GOOGLE_OAUTH2_ENDPOINT: "https://accounts.google.com/o/oauth2/v2/auth"
+  GOOGLE_TOKEN_ENDPOINT: "https://www.googleapis.com/oauth2/v4/token"
+  GOOGLE_REDIRECT_URI: "http://localhost:9292/auth/google_callback"
+  GOOGLE_SCOPE: "email profile"
+
 test:
-  API_URL: "http://localhost:3000/api/v1"
   APP_URL: "http://localhost:9292"
+  API_URL: "http://localhost:3000/api/v1"
+
   REGLINK_EXPIRATION: "30"
+  GOOGLE_OAUTH2_ENDPOINT: "https://accounts.google.com/o/oauth2/v2/auth"
+  GOOGLE_TOKEN_ENDPOINT: "https://www.googleapis.com/oauth2/v4/token"
+  GOOGLE_REDIRECT_URI: "http://localhost:9292/auth/google_callback"
+  GOOGLE_SCOPE: "email profile"
 
 production:
+  APP_URL: "https://vitae2.herokuapp.com"
+  API_URL: "https://vitae2-api.herokuapp.com/api/v1"
+  REGLINK_EXPIRATION: "30"
+  GOOGLE_OAUTH2_ENDPOINT: "https://accounts.google.com/o/oauth2/v2/auth"
+  GOOGLE_TOKEN_ENDPOINT: "https://www.googleapis.com/oauth2/v4/token"
+  GOOGLE_REDIRECT_URI: "http://localhost:9292/auth/google_callback"
+  GOOGLE_SCOPE: "email profile"

@@ -14,6 +14,7 @@ gem 'rake'
 
 # Debugging
 gem 'pry'
+gem 'pry-stack_explorer'
 
 # Communication
 gem 'http'

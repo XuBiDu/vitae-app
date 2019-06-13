@@ -5,7 +5,7 @@ require 'http'
 module Vitae
   # Returns an authenticated user, or nil
   class AuthenticateAccount
-    class UnauthorizedError < StandardError; end
+    class NotAuthenticatedError < StandardError; end
 
     def initialize(config)
       @config = config
@@ -13,15 +13,16 @@ module Vitae
 
     def call(username:, password:)
       response = HTTP.post("#{@config.API_URL}/auth/authenticate",
-                           json: { username: username,
-                                   password: password })
+                           json: { username: username, password: password })
 
-      raise(UnauthorizedError) unless response.code == 200
+      raise(NotAuthenticatedError) if response.code == 401
+      raise if response.code != 200
 
-      account_info = response.parse['attributes']
+      data = response.parse
+
       {
-        account: account_info['account']['attributes'],
-        auth_token: account_info['auth_token']
+        account: data['attributes']['account'],
+        auth_token: data['attributes']['auth_token']
       }
     end
   end
