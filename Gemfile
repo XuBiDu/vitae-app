@@ -26,7 +26,7 @@ gem 'rack-ssl-enforcer'
 gem 'rbnacl' # assumes libsodium package already installed
 
 # From validation
-gem 'dry-validation'
+gem 'dry-validation', '~>0.13'
 
 # Development
 group :development do
