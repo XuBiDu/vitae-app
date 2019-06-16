@@ -3,7 +3,7 @@
 module Vitae
   # Behaviors of the currently logged in account
   class Sheet
-    attr_reader :id, :name, :file_id,
+    attr_reader :id, :name, :file_id, :file_token,
                 :owner, :collaborators, :documents, :policies
 
     def initialize(sheet_info)
@@ -18,6 +18,7 @@ module Vitae
       @id = attributes['id']
       @name = attributes['name']
       @file_id = attributes['file_id']
+      @file_token = attributes['file_token']
     end
 
     def process_relationships(relationships)

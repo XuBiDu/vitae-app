@@ -23,20 +23,6 @@ module Vitae
                 locals: { current_user: @current_account, file_id: file_id }
         end
 
-        r.is 'download', method: :post do
-          # GET /sheet/[FID]/download
-          name = r.params['name']
-          file_token = SecureMessage.encrypt({'file_id': file_id, 'name': name})
-          r.redirect "#{App.config.API_URL}/sheet/#{file_token}/download.zip"
-        end
-
-        r.is 'overleaf', method: :post do
-          # GET /sheet/[FID]/overleaf
-          name = r.params['name']
-          file_token = SecureMessage.encrypt({'file_id': file_id, 'name': name})
-          r.redirect "https://www.overleaf.com/docs?snip_uri=#{App.config.API_URL}/sheet/#{file_token}/download.zip"
-        end
-
         r.is 'delete', method: :post do
           # POST /sheet/[FID]/delete
           DeleteSheet.new(App.config).call(account: @current_account, file_id: file_id)

@@ -58,7 +58,7 @@ module Vitae
 
 
       r.is 'google_callback' do
-        # GET /auth/sso_callback
+        # GET /auth/google_callback
         r.get do
           authorized = AuthorizeGoogleAccount
                        .new(App.config)
@@ -77,11 +77,11 @@ module Vitae
           flash[:error] = 'Could not login with Google'
           response.status = 403
           r.redirect @login_route
-        # rescue StandardError => e
-        #   puts "GOOGLE SSO LOGIN ERROR: #{e.inspect}\n#{e.backtrace}"
-        #   flash[:error] = 'Unexpected API Error'
-        #   response.status = 500
-        #   r.redirect @login_route
+        rescue StandardError => e
+          puts "GOOGLE SSO LOGIN ERROR: #{e.inspect}\n#{e.backtrace}"
+          flash[:error] = 'Unexpected API Error'
+          response.status = 500
+          r.redirect @login_route
         end
       end
 

@@ -66,14 +66,17 @@ table class="table"
 
         / Download
         td
-          form action="/sheet/#{sheet.file_id}/download" method="post" target="_blank"
-            input type='hidden' name='name' value='#{sheet.name}'
+          form action="#{zip_url}/download" method="get" target="_blank"
+            input type='hidden' name='file_token' value="#{sheet.file_token}"
+            input type='hidden' name='template' value='plasmati'
+            input type='hidden' name='destination' value='direct'
             input type="submit" value="Download"
         td
-          form action="/sheet/#{sheet.file_id}/overleaf" method="post" target="_blank"
-            input type='hidden' name='name' value='#{sheet.name}'
+          form action="#{zip_url}/download" method="get" target="_blank"
+            input type='hidden' name='file_token' value="#{sheet.file_token}"
+            input type='hidden' name='template' value='plasmati'
+            input type='hidden' name='destination' value='overleaf'
             input type="submit" value="Open in Overleaf"
-
         td
           - if sheet.policies.can_delete
             div
