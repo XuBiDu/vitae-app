@@ -17,6 +17,9 @@ module Vitae
         rescue GetAccountDetails::InvalidAccount => e
           flash[:error] = e.message
           r.redirect '/auth/login'
+        rescue StandardError => e
+          flash[:error] = 'Internal error -- please try later'
+          r.redirect '/'
         end
 
         # POST /account/<token>

@@ -86,3 +86,13 @@ namespace :session do
   end
 end
 
+namespace :integrity do
+  # usage: $ rake url:integrity URL=http://example.org/script.js
+  desc 'Generate integrity hash for a URL'
+  task :url do
+    sha384 = `curl -L -s #{ENV['URL']} | openssl dgst -sha384 -binary | \
+              openssl enc -base64`
+    puts "sha384-#{sha384}"
+  end
+end
+

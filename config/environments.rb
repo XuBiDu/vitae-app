@@ -14,7 +14,8 @@ module Vitae
     extend Econfig::Shortcut
     Econfig.env = environment.to_s
     Econfig.root = '.'
-    ONE_MONTH = 30 * 24 * 60 * 60
+    ONE_DAY = 24 * 60 * 60
+    ONE_MONTH = 30 * ONE_DAY
 
     ENV['GOOGLE_ACCOUNT_TYPE'] = config['GOOGLE_ACCOUNT_TYPE']
     ENV['GOOGLE_CLIENT_ID'] = config['GOOGLE_CLIENT_ID']
@@ -28,8 +29,6 @@ module Vitae
     end
 
     configure :production do
-      use Rack::SslEnforcer, hsts: true
-
       use Rack::Session::Redis,
           expire_after: ONE_MONTH, redis_server: config.REDIS_URL
     end
