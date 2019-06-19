@@ -1,5 +1,5 @@
 - if flash[:error]
-  div class="alert alert-danger"  id="flash_bar_danger"
+  div class="alert alert-dismissible alert-primary alert-danger"  id="flash_bar_danger"
     - if flash[:error].kind_of?(Array)
         - flash[:error].each do |error|
             = error
@@ -7,7 +7,7 @@
     - else
         = flash[:error]
 - if flash[:notice]
-  div class="alert alert-success"  id="flash_bar_success"
+  div class="alert alert-dismissible alert-primary alert-success"  id="flash_bar_success"
     - if flash[:notice].kind_of?(Array)
         - flash[:notice].each do |notice|
             = notice

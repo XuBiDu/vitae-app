@@ -11,7 +11,7 @@ img.pic-s  {
   border: 1px solid gray;
 }
 
-img.pic-m  {
+.pic-m  {
   max-width:64px;
   max-height:64px;
   border-radius: 64px;

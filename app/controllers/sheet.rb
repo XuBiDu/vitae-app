@@ -50,6 +50,8 @@ module Vitae
           }
 
           task = task_list[action]
+          puts 'Add remove collaborator'
+          puts task
           task[:service].new(App.config).call(
             current_account: @current_account,
             collaborator: collaborator_info,

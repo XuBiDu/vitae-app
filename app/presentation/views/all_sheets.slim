@@ -1,101 +1,149 @@
 div class="row" style="vertical-align: bottom;"
-  div class="col-xs-9"
-    h2 All CVs
-  div class="col-xs-3"
-table class="table"
-  thead
-    tr
-      th Name
-      th Owner
-      th Collaborators
-      th Edit
-      th LaTeX
-      th Actions
-  tbody
-    - sheets.all.each do |sheet|
+
+  / div class="col-xs-3"
+- if sheets.all.length == 0
+  h2 Add a CV to Start
+- else
+  h2 All CVs
+  table class="table"
+    thead
       tr
-        / Name
-        td
-          h4 =sheet.name
-        / Owner
-        td
-          - if sheet.owner.email == current_user.email
-            img class="pic-m" src=current_user.picture data-toggle="tooltip" data-placement="left" title="Me"
-          - else
-            img class="pic-m" src=sheet.owner.picture data-toggle="tooltip" data-placement="left" title="#{sheet.owner.email}"
-        / Collaborators
-        td
-          - sheet.collaborators.each do |collab|
-            - if collab.email == current_user.email
-              img class="pic-m" src=collab.picture data-toggle="tooltip" data-placement="left" title="Me"
-              - if sheet.policies.can_leave
-                button type="button" class="btn btn-success" data-toggle="modal" data-target="#newCollaboratorModal-#{sheet.file_id}" Leave
-            - else
-              div class="row"
-                div class="col-xs-2"
-                  img class="pic-m" src=collab.picture data-toggle="tooltip" data-placement="left" title="#{collab.email}"
-                div class="col-xs-2"
-                  - if sheet.policies.can_remove_collaborators
-                    form role='form' method='post' action="/projects/#{sheet.id}/collabs"
-                      input type='hidden' name='action' value='remove'
-                      input type='hidden' name='email' value="#{collab.email}"
-                      / button type="submit" class="btn btn-xs btn-default"
-                    span class="glyphicon glyphicon-remove"
+        th CV Name
+        th Edit
+        th Download ZIP
+        th Open in Overleaf
+        th Owner
+        th Collaborators
+    tbody
+      - sheets.all.each do |sheet|
+        tr
           / Edit
-          div
-            - if sheet.policies.can_add_collaborators
-                button type="button" class="btn btn-success" data-toggle="modal" data-target="#newCollaboratorModal-#{sheet.file_id}" Add
-                div id="newCollaboratorModal-#{sheet.file_id}" class="modal fade" role="dialog"
+          / Name
+          td
+            h4 =sheet.name
+
+          td
+            form action="/sheet/#{sheet.file_id}/edit" method="get" target="_blank"
+              button type="submit" class="btn btn-success"
+                span class="fa fa-edit fa-lg"
+                = " Edit"
+
+          / Download
+          td
+            form action="#{zip_url}/download" method="get" target="_blank"
+              input type='hidden' name='file_token' value="#{sheet.file_token}"
+              input type='hidden' name='template' value='plasmati'
+              input type='hidden' name='destination' value='direct'
+              button type="submit" class="btn btn-success"
+                span class="fa fa-download fa-lg"
+                = " Download"
+
+          td
+            form action="#{zip_url}/download" method="get" target="_blank"
+              input type='hidden' name='file_token' value="#{sheet.file_token}"
+              input type='hidden' name='template' value='plasmati'
+              input type='hidden' name='destination' value='overleaf'
+              button type="submit" class="btn btn-success"
+                span class="fa fa-leaf fa-lg"
+                = " Open in Overleaf"
+          / Owner
+          td
+            - if sheet.owner.email == current_user.email
+              img class="pic-m" src=current_user.picture data-toggle="tooltip" data-placement="left" title="Me"
+            - else
+              img class="pic-m" src=sheet.owner.picture data-toggle="tooltip" data-placement="left" title="#{sheet.owner.email}"
+          / Collaborators
+          td
+            table class='table table-borderless'
+              thead
+              tbody
+                - sheet.collaborators.each_with_index do |collab, index|
+                  tr
+                    td
+                      - if collab.email == current_user.email
+                        img class="pic-s" src=collab.picture data-toggle="tooltip" data-placement="left" title="Me"
+                      - else
+                        img class="pic-s" src=collab.picture data-toggle="tooltip" data-placement="left" title="#{collab.email}"
+                    td
+                      - if sheet.policies.can_remove_collaborators
+                        button type="button" title="Remove a collaborator" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#newCollaboratorModal-#{sheet.file_id}-#{index}"
+                          span class="fa fa-user-times"
+
+
+                        div id="newCollaboratorModal-#{sheet.file_id}-#{index}" class="modal fade" role="dialog"
+                          div class="modal-dialog"
+                            div class="modal-content"
+                              div class="modal-header"
+                                h4 Remove a Collaborator
+                              div class="modal-body"
+                                form role="form" action="/sheet/#{sheet.file_id}/collabs" method='post' id='new-collaborator-form'
+                                  input type='hidden' name='action' value='remove'
+                                  div class="form-group"
+                                    label for='email_input' Email address:
+                                    input type='text' name='email' id='email_input' class="form-control" value="#{collab.email}" readonly="readonly"
+                                  button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Remove
+                                  button type="button" class="btn btn-default" data-dismiss="modal" Cancel
+
+                - if sheet.policies.can_add_collaborators
+                    tr
+                      td colspan=2
+                        button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newCollaboratorModal-#{sheet.file_id}" title="Add a collaborator"
+                          span class="fa fa-user-plus"
+                        div id="newCollaboratorModal-#{sheet.file_id}" class="modal fade" role="dialog"
+                          div class="modal-dialog"
+                            div class="modal-content"
+                              div class="modal-header"
+                                h4 Add a Collaborator
+                              div class="modal-body"
+                                form role="form" action="/sheet/#{sheet.file_id}/collabs" method='post' id='new-collaborator-form'
+                                  input type='hidden' name='action' value='add'
+                                  div class="form-group"
+                                    label for='email_input' Email address:
+                                    input type='text' name='email' id='email_input' class="form-control" placeholder="Email of collaborator"
+                                  button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Add
+                                  button type="button" class="btn btn-default" data-dismiss="modal" Cancel
+
+          td
+            - if sheet.policies.can_delete
+              div
+                button type="button" class="btn btn-danger" value="Delete CV" id="submitBtn" data-toggle="modal" data-target="#confirm-delete-#{sheet.file_id}"
+                  span class="fa fa-trash fa-lg"
+                  = " Delete CV"
+                div class="modal fade" id="confirm-delete-#{sheet.file_id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
                   div class="modal-dialog"
                     div class="modal-content"
-                      div class="modal-header"
-                        h4 Add a Collaborator
-                      div class="modal-body"
-                        form role="form" action="/sheet/#{sheet.file_id}/collabs" method='post' id='new-collaborator-form'
-                          input type='hidden' name='action' value='add'
-                          div class="form-group"
-                            label for='email_input' Email address:
-                            input type='text' name='email' id='email_input' class="form-control" placeholder="Email of collaborator"
-                          button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Add
-                          button type="button" class="btn btn-default" data-dismiss="modal" Cancel
+                        div class="modal-header"
+                            h4 Confirm Deletion
+                        div class="modal-body"
+                            h5 Are you sure you want to delete "#{sheet.name}"?
+                        div class="modal-footer"
+                            form role="form" action="/sheet/#{sheet.file_id}/delete" method='post' id='new-collaborator-form'
+                              input type='hidden' name='action' value='delete'
+                              button type="button" class="btn btn-default" data-dismiss="modal" Cancel
+                              button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Delete CV Forever
+            - if sheet.policies.can_leave
+                button type="button" class="btn btn-warning" value="Delete CV" id="submitBtn" data-toggle="modal" data-target="#confirm-leave-#{sheet.file_id}"
+                  span class="fa fa-sign-out-alt fa-lg"
+                  = " Leave CV"
+                div class="modal fade" id="confirm-leave-#{sheet.file_id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+                  div class="modal-dialog"
+                    div class="modal-content"
+                        div class="modal-header"
+                            h4 Confirm Deletion
+                        div class="modal-body"
+                            h5 Are you sure you want to leave "#{sheet.name}"?
+                        div class="modal-footer"
+                            form role="form" action="/sheet/#{sheet.file_id}/delete" method='post' id='new-collaborator-form'
+                              input type='hidden' name='action' value='delete'
+                              button type="button" class="btn btn-default" data-dismiss="modal" Cancel
+                              button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Leave CV
 
-        / Edit
-        td
-          - if sheet.policies.can_edit
-            a href="/sheet/#{sheet.file_id}/edit" Edit
+/ Add a new CV
 
-        / Download
-        td
-          form action="#{zip_url}/download" method="get" target="_blank"
-            input type='hidden' name='file_token' value="#{sheet.file_token}"
-            input type='hidden' name='template' value='plasmati'
-            input type='hidden' name='destination' value='direct'
-            input type="submit" value="Download"
-        td
-          form action="#{zip_url}/download" method="get" target="_blank"
-            input type='hidden' name='file_token' value="#{sheet.file_token}"
-            input type='hidden' name='template' value='plasmati'
-            input type='hidden' name='destination' value='overleaf'
-            input type="submit" value="Open in Overleaf"
-        td
-          - if sheet.policies.can_delete
-            div
-              input type="button" name="btn" value="Delete CV" id="submitBtn" data-toggle="modal" data-target="#confirm-submit-#{sheet.file_id}" class="btn btn-default"
-              div class="modal fade" id="confirm-submit-#{sheet.file_id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-                div class="modal-dialog"
-                  div class="modal-content"
-                      div class="modal-header"
-                          h4 Confirm Deletion
-                      div class="modal-body"
-                          h5 Are you sure you want to delete "#{sheet.name}"?
-                      div class="modal-footer"
-                          form role="form" action="/sheet/#{sheet.file_id}/delete" method='post' id='new-collaborator-form'
-                            input type='hidden' name='action' value='delete'
-                            button type="button" class="btn btn-default" data-dismiss="modal" Cancel
-                            button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Delete Forever
+button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddCVModal"
+  span class="fa fa-plus fa-lg"
+  = " Add new CV"
 
-
-button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddCVModal" Add new CV
 div id="AddCVModal" class="modal fade" role="dialog"
   div class="modal-dialog"
     div class="modal-content"

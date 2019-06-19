@@ -40,7 +40,7 @@ module Vitae
     def get_sso_account_from_api(tokens)
       response =
         HTTP.post("#{@config.API_URL}/auth/sso",
-                  json: tokens)
+                  json: SignedMessage.sign(tokens))
       raise if response.code > 400
 
       account_info = response.parse['data']['attributes']

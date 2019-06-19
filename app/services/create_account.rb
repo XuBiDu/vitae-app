@@ -17,13 +17,14 @@ module Vitae
     end
 
     def call(email:, username:, password:)
-      message = { email: email,
-                  username: username,
-                  password: password }
+      account_details = { email: email,
+                          username: username,
+                          password: password
+                        }
 
       response = HTTP.post(
         "#{@config.API_URL}/accounts/",
-        json: message
+        json: SignedMessage.sign(account_details)
       )
 
       raise InvalidAccount unless response.code == 201

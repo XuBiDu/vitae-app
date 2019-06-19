@@ -60,9 +60,11 @@ module Vitae
       r.is 'google_callback' do
         # GET /auth/google_callback
         r.get do
+          puts 'google_callback'
           authorized = AuthorizeGoogleAccount
                        .new(App.config)
                        .call(r.params['code'])
+          puts authorized.inspect
 
           current_account = Account.new(
             authorized[:account],
@@ -71,7 +73,7 @@ module Vitae
 
           CurrentSession.new(session).current_account = current_account
 
-          flash[:notice] = "Welcome #{current_account.username}!"
+          flash[:notice] = "Welcome #{current_account.name}!"
           r.redirect '/sheets'
         rescue AuthorizeGoogleAccount::UnauthorizedError
           flash[:error] = 'Could not login with Google'

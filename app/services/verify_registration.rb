@@ -17,7 +17,7 @@ module Vitae
         "#{@config.APP_URL}/auth/register/#{registration_token}"
 
       response = HTTP.post("#{@config.API_URL}/auth/register",
-                           json: registration_data)
+                           json: SignedRequest.sign(registration_data))
       raise(VerificationError, response.parse['message']) unless response.code == 202
 
       response.parse

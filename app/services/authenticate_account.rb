@@ -12,8 +12,15 @@ module Vitae
     end
 
     def call(username:, password:)
-      response = HTTP.post("#{@config.API_URL}/auth/authenticate",
-                           json: { username: username, password: password })
+      response =
+        HTTP.post("#{@config.API_URL}/auth/authenticate",
+                  json: SignedMessage.sign(
+                    {
+                      username: username,
+                      password: password
+                    }
+                  )
+                )
 
       raise(NotAuthenticatedError) if response.code == 401
       raise if response.code != 200
