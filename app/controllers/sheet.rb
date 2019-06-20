@@ -6,6 +6,7 @@ module Vitae
   # Sheets controller for Vitae API
   class App < Roda
     route('sheet') do |r|
+      puts App.config.inspect
       r.redirect '/auth/login' unless @current_account.logged_in?
 
       @sheets_route = '/sheets'

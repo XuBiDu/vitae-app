@@ -9,6 +9,7 @@ require_relative '../require_app'
 module Vitae
   # Configuration for the API
   class App < Roda
+    puts 'In environment'
     plugin :environments
 
     extend Econfig::Shortcut
@@ -16,6 +17,9 @@ module Vitae
     Econfig.root = '.'
     ONE_DAY = 24 * 60 * 60
     ONE_MONTH = 30 * ONE_DAY
+
+    puts config.inspect
+
 
     ENV['GOOGLE_ACCOUNT_TYPE'] = config['GOOGLE_ACCOUNT_TYPE']
     ENV['GOOGLE_CLIENT_ID'] = config['GOOGLE_CLIENT_ID']

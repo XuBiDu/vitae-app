@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../../config/environments'
 require_relative './app'
 require 'roda'
 require 'rack/ssl-enforcer'
@@ -11,11 +12,19 @@ module Vitae
     plugin :environments
     plugin :multi_route
 
-    FONT_SRC = %w[https://maxcdn.bootstrapcdn.com].freeze
+    FONT_SRC = %w[https://maxcdn.bootstrapcdn.com
+                  https://cdnjs.cloudflare.com
+                  https://fonts.googleapis.com
+                  https://fonts.gstatic.com].freeze
     SCRIPT_SRC = %w[https://code.jquery.com
-                    https://maxcdn.bootstrapcdn.com].freeze
+                    https://maxcdn.bootstrapcdn.com
+                    https://cdnjs.cloudflare.com].freeze
     STYLE_SRC = %w[https://maxcdn.bootstrapcdn.com
-                   https://cdnjs.cloudflare.com].freeze
+                   https://cdnjs.cloudflare.com
+                   https://fonts.googleapis.com].freeze
+    IMG_SRC = %w[https://*.googleusercontent.com].freeze
+    FRAME_SRC = %w[https://docs.google.com].freeze
+    FORM_SRC = ["#{App.config.API_URL}/download"].freeze
 
     configure :production do
       use Rack::SslEnforcer, hsts: true
@@ -29,7 +38,7 @@ module Vitae
         secure: true,
         httponly: true,
         samesite: {
-          strict: true
+          strict: false
         }
       }
 
@@ -43,18 +52,19 @@ module Vitae
       # rubocop:disable Lint/PercentStringArray
       config.csp = {
         report_only: false,
+        block_all_mixed_content: true,
         preserve_schemes: true,
-        default_src: %w['self'],
         child_src: %w['self'],
         connect_src: %w[wws:],
-        img_src: %w['self'],
+        default_src: %w['self'],
+        img_src: %w['self'] + IMG_SRC,
         font_src: %w['self'] + FONT_SRC,
-        script_src: %w['self'] + SCRIPT_SRC,
-        style_src: %W['self' 'unsafe-inline'] + STYLE_SRC,
-        form_action: %w['self'],
+        form_action: %w['self'] + FORM_SRC,
         frame_ancestors: %w['none'],
+        frame_src: %w['self'] + FRAME_SRC,
         object_src: %w['none'],
-        block_all_mixed_content: true,
+        script_src: %w['self' 'unsafe-inline'] + SCRIPT_SRC,
+        style_src: %W['self' 'unsafe-inline'] + STYLE_SRC,
         report_uri: %w[/security/csp_violation]
       }
       # rubocop:enable Lint/PercentStringArray
