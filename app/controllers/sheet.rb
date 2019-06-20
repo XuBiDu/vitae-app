@@ -6,7 +6,6 @@ module Vitae
   # Sheets controller for Vitae API
   class App < Roda
     route('sheet') do |r|
-      puts App.config.inspect
       r.redirect '/auth/login' unless @current_account.logged_in?
 
       @sheets_route = '/sheets'
@@ -51,7 +50,6 @@ module Vitae
           }
 
           task = task_list[action]
-          puts 'Add remove collaborator'
           puts task
           task[:service].new(App.config).call(
             current_account: @current_account,

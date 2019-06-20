@@ -60,7 +60,6 @@ module Vitae
       r.is 'google_callback' do
         # GET /auth/google_callback
         r.get do
-          puts 'google_callback'
           authorized = AuthorizeGoogleAccount
                        .new(App.config)
                        .call(r.params['code'])
