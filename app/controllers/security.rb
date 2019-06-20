@@ -5,7 +5,7 @@ require 'roda'
 require 'rack/ssl-enforcer'
 require 'secure_headers'
 
-module Credence
+module Vitae
   # Configuration for the API
   class App < Roda
     plugin :environments
@@ -23,7 +23,6 @@ module Credence
 
     ## Uncomment to drop the login session in case of any violation
     # use Rack::Protection, reaction: :drop_session
-    use SecureHeaders::Middleware
 
     SecureHeaders::Configuration.default do |config|
       config.cookies = {
@@ -60,6 +59,8 @@ module Credence
       }
       # rubocop:enable Lint/PercentStringArray
     end
+
+    use SecureHeaders::Middleware
 
     route('security') do |r|
       # POST security/csp_violation
