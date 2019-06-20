@@ -23,8 +23,9 @@ module Vitae
                    https://cdnjs.cloudflare.com
                    https://fonts.googleapis.com].freeze
     IMG_SRC = %w[https://*.googleusercontent.com].freeze
-    FRAME_SRC = %w[https://docs.google.com].freeze
-    FORM_SRC = ["#{App.config.ZIP_URL}/download"].freeze
+    FRAME_SRC = %w[https://docs.google.com
+                   https://www.overleaf.com].freeze
+    FORM_SRC = ["#{App.config.ZIP_URL}/download", "https://www.overleaf.com"].freeze
 
     configure :production do
       use Rack::SslEnforcer, hsts: true
