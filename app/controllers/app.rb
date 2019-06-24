@@ -2,6 +2,7 @@
 
 require 'roda'
 require 'slim'
+require 'econfig'
 
 module Vitae
   # Base class for Vitae Web Application
@@ -11,7 +12,6 @@ module Vitae
     plugin :assets, css: 'style.css', path: 'app/presentation/assets'
     plugin :render, engine: 'slim', views: 'app/presentation/views'
     plugin :public, root: 'app/presentation/public'
-
     route do |r|
       @current_account = CurrentSession.new(session).current_account
 
@@ -21,11 +21,15 @@ module Vitae
 
       # GET /
       r.root do
-        view 'home', locals: { current_account: @current_account }
+        view 'home', locals: {
+          current_account: @current_account
+        }
       end
+
       r.on 'tos' do
         view 'tos'
       end
+
       r.on 'privacy' do
         view 'privacy'
       end

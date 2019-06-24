@@ -2,9 +2,9 @@
 
 require 'http'
 
-# Returns all projects belonging to an account
+# Returns all account details
 class GetAccountDetails
-  # Error for accounts that cannot be created
+  # Error for accounts that cannot be viewed
   class InvalidAccount < StandardError
     def message
       'You are not authorized to see details of that account'
@@ -15,7 +15,8 @@ class GetAccountDetails
     @config = config
   end
 
-  def call(current_account, username)
+  def call(current_account, username: nil)
+    username = current_account.info.username if username.nil?
     response = HTTP.auth("Bearer #{current_account.auth_token}")
                    .get("#{@config.API_URL}/accounts/#{username}")
     raise InvalidAccount if response.code != 200

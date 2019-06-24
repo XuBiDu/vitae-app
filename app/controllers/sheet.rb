@@ -11,16 +11,18 @@ module Vitae
       @sheets_route = '/sheets'
 
       r.on String do |file_id|
+        # GET /sheet/FID/edit
         r.is 'edit', method: :get do
-        # GET /sheets/
-            view :sheet,
-                locals: { current_user: @current_account, file_id: file_id }
+          view :edit,
+               locals: { current_user: @current_account, file_id: file_id }
         end
+
         r.is 'view', method: :get do
-          # GET /sheets/
+          # GET /sheet/FID/view
           sheet = GetSheet.new(App.config).call(account: @current_account, file_id: file_id)
           view :sheet,
-                locals: { current_user: @current_account, file_id: file_id }
+               locals: { current_user: @current_account,
+                         sheet: Sheet.new(sheet)}
         end
 
         r.is 'delete', method: :post do
@@ -31,7 +33,6 @@ module Vitae
         ensure
           r.redirect @sheets_route
         end
-
 
         # POST /sheets/[FID]/collabs
         r.post('collabs') do
@@ -50,7 +51,6 @@ module Vitae
           }
 
           task = task_list[action]
-          puts task
           task[:service].new(App.config).call(
             current_account: @current_account,
             collaborator: collaborator_info,

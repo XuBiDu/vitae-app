@@ -1,36 +1,36 @@
-# frozen_string_literal: true
+# # frozen_string_literal: true
 
-require 'http'
+# require 'http'
 
-module Vitae
-  # Returns an authenticated user, or nil
-  class AuthenticateAccount
-    class NotAuthenticatedError < StandardError; end
+# module Vitae
+#   # Returns an authenticated user, or nil
+#   class AuthenticateAccount
+#     class NotAuthenticatedError < StandardError; end
 
-    def initialize(config)
-      @config = config
-    end
+#     def initialize(config)
+#       @config = config
+#     end
 
-    def call(username:, password:)
-      response =
-        HTTP.post("#{@config.API_URL}/auth/authenticate",
-                  json: SignedMessage.sign(
-                    {
-                      username: username,
-                      password: password
-                    }
-                  )
-                )
+#     def call(username:, password:)
+#       response =
+#         HTTP.post("#{@config.API_URL}/auth/authenticate",
+#                   json: SignedMessage.sign(
+#                     {
+#                       username: username,
+#                       password: password
+#                     }
+#                   )
+#                 )
 
-      raise(NotAuthenticatedError) if response.code == 401
-      raise if response.code != 200
+#       raise(NotAuthenticatedError) if response.code == 401
+#       raise if response.code != 200
 
-      data = response.parse
+#       data = response.parse
 
-      {
-        account: data['attributes']['account'],
-        auth_token: data['attributes']['auth_token']
-      }
-    end
-  end
-end
+#       {
+#         account: data['attributes']['account'],
+#         auth_token: data['attributes']['auth_token']
+#       }
+#     end
+#   end
+# end

@@ -8,15 +8,15 @@ module Vitae
       @account_route = '/account'
 
       r.on do
-        # GET /account/
+        # GET /account/username
         r.get String do |username|
           account = GetAccountDetails.new(App.config).call(
-            @current_account, username
+            @current_account, username: username
           )
           view :account, locals: { account: account }
         rescue GetAccountDetails::InvalidAccount => e
           flash[:error] = e.message
-          r.redirect '/auth/login'
+          r.redirect '/'
         rescue StandardError => e
           flash[:error] = 'Internal error -- please try later'
           r.redirect '/'
@@ -48,6 +48,20 @@ module Vitae
           r.redirect(
             "#{App.config.APP_URL}/auth/register/#{registration_token}"
           )
+        end
+
+        r.get do
+          # GET /account
+          account = GetAccountDetails.new(App.config).call(
+            @current_account
+          )
+          view :account, locals: { account: account }
+        # rescue GetAccountDetails::InvalidAccount => e
+        #   flash[:error] = e.message
+        #   r.redirect '/'
+        # rescue StandardError => e
+        #   flash[:error] = 'Internal error -- please try later'
+        #   r.redirect '/'
         end
       end
     end

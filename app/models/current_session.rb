@@ -9,17 +9,17 @@ module Vitae
     end
 
     def current_account
-      Account.new(@secure_session.get(:account),
+      Account.new(@secure_session.get(:account_info),
                   @secure_session.get(:auth_token))
     end
 
     def current_account=(current_account)
-      @secure_session.set(:account, current_account.account_info)
+      @secure_session.set(:account_info, current_account.account_info)
       @secure_session.set(:auth_token, current_account.auth_token)
     end
 
     def delete
-      @secure_session.delete(:account)
+      @secure_session.delete(:account_info)
       @secure_session.delete(:auth_token)
     end
   end

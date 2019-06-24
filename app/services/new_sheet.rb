@@ -13,8 +13,8 @@ class NewSheet
   def call(current_account:, cv_info:)
     response = HTTP.auth("Bearer #{current_account.auth_token}")
                    .post("#{@config.API_URL}/sheets",
-                    json: { title: cv_info[:title] })
+                         json: { title: cv_info[:title] })
 
-    # raise CannotCreateError unless response.code == 201
+    raise CannotCreateError unless response.code == 201
   end
 end

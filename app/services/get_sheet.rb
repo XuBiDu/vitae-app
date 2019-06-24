@@ -10,7 +10,7 @@ class GetSheet
 
   def call(account:, file_id:)
     response = HTTP.auth("Bearer #{account.auth_token}")
-                   .get("#{@config.API_URL}/sheet/#{file_id}/view")
+                   .get("#{@config.API_URL}/sheet/#{file_id}")
 
     response.code == 200 ? response.parse['data'] : nil
   end

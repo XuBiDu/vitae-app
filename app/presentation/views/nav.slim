@@ -1,3 +1,4 @@
+= "#{@google_oauth2_url}"
 nav class="navbar navbar-default"
   div class="container-fluid"
     div class="navbar-header"
@@ -6,18 +7,23 @@ nav class="navbar navbar-default"
       - if @current_account.logged_in?
         li
           a href="/sheets/" CVs
-      - else
-        li
-          a href='/auth/login' Sign In
+      / - else
+      /   li
+      /     a href='/auth/login' Sign In
         / li
           / a href='/auth/register' register
 
     ul class="nav navbar-nav navbar-right"
       - if @current_account.logged_in?
         li
-          a href="/account/#{@current_account.username}"
-            img class="pic-s" src=@current_account.picture
+          a href="/account/#{@current_account.info.email}"
+            img class="pic-s" src=@current_account.info.picture
         li
           a href='/auth/logout' logout
-        / li
-          / a href='/auth/register' register
+      - else
+        li
+          a class="btn-block btn-lg" href='/auth/login'
+            img class="img-responsive" src="/btn_google_signin_dark_normal_web.png"
+
+    /     / li
+    /       / a href='/auth/register' register

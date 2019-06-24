@@ -1,5 +1,10 @@
 div class="row" style="vertical-align: bottom;"
   div class="col-xl-12"
-    iframe width="100%" height="800px" src="https://docs.google.com/spreadsheets/d/#{file_id}/?headers=false"
+    h1 =sheet.title
+    h2 Owner
+    h4 #{sheet.owner.info.name} (#{sheet.owner.info.email})
+    - if sheet.collaborators.length.nonzero?
+      h3 Collaborators
+      - sheet.collaborators.each do |collab|
+        h4 #{collab.info.name} (#{collab.info.email})
 
-  a href="https://docs.google.com/spreadsheets/d/#{file_id}/?headers=false" target="_blank" Open in New Window

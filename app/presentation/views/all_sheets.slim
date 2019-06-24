@@ -8,7 +8,7 @@ div class="row" style="vertical-align: bottom;"
   table class="table"
     thead
       tr
-        th CV Name
+        th CV Title
         th Edit
         th Download ZIP
         th Open in Overleaf
@@ -20,7 +20,8 @@ div class="row" style="vertical-align: bottom;"
           / Edit
           / Name
           td
-            h4 =sheet.name
+            a href="/sheet/#{sheet.file_id}/view"
+              h4 =sheet.title
 
           td
             form action="/sheet/#{sheet.file_id}/edit" method="get" target="_blank"
@@ -48,10 +49,10 @@ div class="row" style="vertical-align: bottom;"
                 = " Open in Overleaf"
           / Owner
           td
-            - if sheet.owner.email == current_user.email
-              img class="pic-m" src=current_user.picture data-toggle="tooltip" data-placement="left" title="Me"
+            - if sheet.owner.info.email == current_user.info.email
+              img class="pic-m" src=current_user.info.picture data-toggle="tooltip" data-placement="left" title="Me"
             - else
-              img class="pic-m" src=sheet.owner.picture data-toggle="tooltip" data-placement="left" title="#{sheet.owner.email}"
+              img class="pic-m" src=sheet.owner.info.picture data-toggle="tooltip" data-placement="left" title="#{sheet.owner.info.email}"
           / Collaborators
           td
             table class='table table-borderless'
@@ -60,17 +61,17 @@ div class="row" style="vertical-align: bottom;"
                 - sheet.collaborators.each_with_index do |collab, index|
                   tr
                     td
-                      - if collab.email == current_user.email
-                        img class="pic-s" src=collab.picture data-toggle="tooltip" data-placement="left" title="Me"
+                      - if collab.info.email == current_user.info.email
+                        img class="pic-s" src=collab.info.picture data-toggle="tooltip" data-placement="left" title="Me"
                       - else
-                        img class="pic-s" src=collab.picture data-toggle="tooltip" data-placement="left" title="#{collab.email}"
+                        img class="pic-s" src=collab.info.picture data-toggle="tooltip" data-placement="left" title="#{collab.info.email}"
                     td
                       - if sheet.policies.can_remove_collaborators
-                        button type="button" title="Remove a collaborator" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#newCollaboratorModal-#{sheet.file_id}-#{index}"
+                        button type="button" title="Remove a collaborator" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#delCollaboratorModal-#{sheet.file_id}-#{index}"
                           span class="fa fa-user-times"
 
 
-                        div id="newCollaboratorModal-#{sheet.file_id}-#{index}" class="modal fade" role="dialog"
+                        div id="delCollaboratorModal-#{sheet.file_id}-#{index}" class="modal fade" role="dialog"
                           div class="modal-dialog"
                             div class="modal-content"
                               div class="modal-header"
@@ -80,7 +81,7 @@ div class="row" style="vertical-align: bottom;"
                                   input type='hidden' name='action' value='remove'
                                   div class="form-group"
                                     label for='email_input' Email address:
-                                    input type='text' name='email' id='email_input' class="form-control" value="#{collab.email}" readonly="readonly"
+                                    input type='text' name='email' id='email_input' class="form-control" value="#{collab.info.email}" readonly="readonly"
                                   button type='submit' id='registration-form-submit' class='submit' value='submit' class="btn btn-success" Remove
                                   button type="button" class="btn btn-default" data-dismiss="modal" Cancel
 
@@ -115,7 +116,7 @@ div class="row" style="vertical-align: bottom;"
                         div class="modal-header"
                             h4 Confirm Deletion
                         div class="modal-body"
-                            h5 Are you sure you want to delete "#{sheet.name}"?
+                            h5 Are you sure you want to delete "#{sheet.title}"?
                         div class="modal-footer"
                             form role="form" action="/sheet/#{sheet.file_id}/delete" method='post' id='new-collaborator-form'
                               input type='hidden' name='action' value='delete'
@@ -131,7 +132,7 @@ div class="row" style="vertical-align: bottom;"
                         div class="modal-header"
                             h4 Confirm Deletion
                         div class="modal-body"
-                            h5 Are you sure you want to leave "#{sheet.name}"?
+                            h5 Are you sure you want to leave "#{sheet.title}"?
                         div class="modal-footer"
                             form role="form" action="/sheet/#{sheet.file_id}/delete" method='post' id='new-collaborator-form'
                               input type='hidden' name='action' value='delete'

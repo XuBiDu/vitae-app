@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# Parses Json information as needed
-
 # Converts keys of json or hash into symbols
 class JsonRequestBody
   def self.parse_symbolize(json_str)

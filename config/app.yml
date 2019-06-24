@@ -20,7 +20,7 @@ test:
   GOOGLE_OAUTH2_ENDPOINT: "https://accounts.google.com/o/oauth2/v2/auth"
   GOOGLE_TOKEN_ENDPOINT: "https://www.googleapis.com/oauth2/v4/token"
   GOOGLE_REDIRECT_URI: "http://localhost:9292/auth/google_callback"
-  GOOGLE_SCOPE: "email profile"
+  GOOGLE_SCOPE: email profile
 
 
 production:
